@@ -1,0 +1,26 @@
+{
+  "name": "agero/test-task",
+  "type": "library",
+  "description": "A Simple Web Script",
+  "keywords": [
+    "web",
+    "test"
+  ],
+  "authors": [
+    {
+      "name": "Alex Sl",
+      "email": "alex.slobodianiuk.84@gmail.com"
+    }
+  ],
+  "require": {
+    "swiftmailer/swiftmailer": "6.2.x-dev",
+    "ext-json": "*",
+    "ext-pdo": "*",
+    "ext-curl": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "app\\": "src"
+    }
+  }
+}
