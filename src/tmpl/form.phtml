@@ -54,17 +54,17 @@
         <script>
             $(document).ready(function () {
                 $("#town-list-element").change(function () {
-                    document.selectedTown = $(this).val();
                     $.ajax({
                         url: "/event-sessions",
                         method: 'post',
-                        data: JSON.stringify({selectedTown: document.selectedTown}),
+                        data: JSON.stringify({selectedTown: $(this).val()}),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (response) {
-                            console.log(response);
                             $('#no-any-event-session-message').hide();
                             const events = JSON.parse(JSON.stringify(response));
+                            $('#events-list > option').remove();
+                            $('#events-list').append($('<option></option>').text('Select...'));
                             if (events.length) {
                                 $.each(events, function (key, value) {
                                     $('#events-list')
@@ -72,10 +72,8 @@
                                             .attr("value", value.dt)
                                             .text(value.label));
                                 });
-
-                                $('#event-session-element').show();
+                                //$('#event-session-element').show();
                             } else {
-                                $('#event-session-element').hide();
                                 $('#no-any-event-session-message').show();
                             }
                         },
@@ -88,8 +86,8 @@
         </script>
     </div>
 
-    <div  class="form-element-wrapper">
-        <label id="event-session-element" style="display: none">Set Date and time*:
+    <div class="form-element-wrapper">
+        <label id="event-session-element">Set Date and time*:
             <select name="event-session" id="events-list">
                 <option value="0">Select...</option>
             </select>
@@ -102,7 +100,7 @@
         </p>
     </div>
 
-    <div  class="form-element-wrapper">
+    <div class="form-element-wrapper">
         <label for="comment">Your comment:
             <br>
             <textarea rows="10" cols="45" name="comment" id="comment"></textarea>
@@ -110,48 +108,56 @@
         <ul id="comment-messages" class="errors"></ul>
     </div>
 
+    <input type="hidden" name="csrf_token" value="<?php echo $csrf ?>">
     <input type="submit" value="Send">
 
 </form>
 
 <script>
     $(document).ready(function () {
-        $('form#event-registration').submit(function (event){
+
+        $('form#event-registration').submit(function (event) {
             event.preventDefault();
+            sendForm(1);
+        });
 
+        $('input[name="name"], input[name="email"]').change(function (event) {
+            sendForm(0);
+        });
+
+        $('select[name="town"]').change(function (event) {
+            $('select[name="event-session"]').val(0);
+        });
+
+        $('select[name="town"], select[name="event-session"]').change(function (event) {
+            sendForm(0);
+        });
+
+        const sendForm = function (submit) {
+            const form = $('form#event-registration');
             const formData = new FormData();
-
-            formData.append('name', $(this).find('input[name="name"]').val());
-            formData.append('email', $(this).find('input[name="email"]').val());
-            formData.append('town', $(this).find('select[name="town"]').val());
-            formData.append('event-session', $(this).find('select[name="event-session"]').val());
-            formData.append('comment', $(this).find('textarea[name="comment"]').val());
-
-            for (var value of formData.values()) {
-                console.log(value);
-            }
+            formData.append('csrf_token', form.find('input[name="csrf_token"]').val());
+            formData.append('name', form.find('input[name="name"]').val());
+            formData.append('email', form.find('input[name="email"]').val());
+            formData.append('town', form.find('select[name="town"]').val());
+            formData.append('event-session', form.find('select[name="event-session"]').val());
+            formData.append('comment', form.find('textarea[name="comment"]').val());
+            formData.append('submit', submit);
             $.ajax({
-                url: $(this).attr('action'),
-                method: $(this).attr('method'),
+                url: form.attr('action'),
+                method: form.attr('method'),
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    console.log(response);
-
                     const data = JSON.parse(JSON.stringify(response));
-
                     if (data.hasOwnProperty('status') && data.status === 'done') {
-                        //document.location.href = '/done'
+                        document.location.href = '/done'
                     }
-
                     $('.form-element-wrapper > .errors > li').remove();
                     $('.form-element-wrapper > .errors').hide();
-
                     $.each(data, function (key, errors) {
                         $.each(errors, function (id, error) {
-                            console.log(key)
-                            console.log(error)
                             $('ul#' + key + '-messages').append($('<li></li>').text(error));
                         });
                         $('.form-element-wrapper > .errors').show();
@@ -161,7 +167,7 @@
                     console.log(response);
                 }
             });
-        });
+        }
     });
 </script>
 

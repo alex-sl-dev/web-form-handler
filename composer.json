@@ -16,7 +16,8 @@
     "swiftmailer/swiftmailer": "6.2.x-dev",
     "ext-json": "*",
     "ext-pdo": "*",
-    "ext-curl": "*"
+    "ext-curl": "*",
+    "ext-openssl": "*"
   },
   "autoload": {
     "psr-4": {

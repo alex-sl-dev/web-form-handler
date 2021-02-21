@@ -22,7 +22,7 @@ class Controller
      */
     protected function render($file, $args)
     {
-        $filePath = __DIR__ . '/../tmpl/' . $file. '.phtml';
+        $filePath = __DIR__ . '/../tmpl/' . $file . '.phtml';
 
         // ensure the file exists
         if (!file_exists($filePath)) {
@@ -48,4 +48,25 @@ class Controller
         print json_encode($json);
     }
 
+    /**
+     * https://gist.github.com/ziadoz/3454607
+     * @param bool $force
+     * @return mixed|string
+     */
+    protected function generateCSRFToken($force = false): string
+    {
+        if (!isset($_SESSION['csrf_token']) || $force) {
+            $_SESSION['csrf_token'] = base64_encode(openssl_random_pseudo_bytes(32));
+        }
+
+        return $_SESSION["csrf_token"];
+    }
+
+    /**
+     * @return bool
+     */
+    protected function validCSRF(): bool
+    {
+        return (isset($_POST['csrf_token']) && $_POST['csrf_token'] === $_SESSION['csrf_token']);
+    }
 }

@@ -57,6 +57,7 @@ class EventFormController extends Controller
                 EventForm::$EVENT_SESSION => '',
                 EventForm::$COMMENT => '',
                 'townsList' => $townsList,
+                'csrf' => $this->generateCSRFToken(true)
             ]);
         } catch (Exception $e) {
             // non exists Logger::error($e);
@@ -71,7 +72,12 @@ class EventFormController extends Controller
     {
         $this->eventForm->handleRequest($_POST);
 
-        if (!$this->eventForm->hasErrors()) {
+        if (!$this->validCSRF()) {
+            $this->renderJSON(['error' => 'Not valid CSRF Token']);
+            return;
+        }
+
+        if (!$this->eventForm->hasErrors() && boolval($_POST['submit'])) {
             $mail = new MailMessage(
                 $_POST['name'],
                 $_POST['email'],
@@ -114,4 +120,5 @@ class EventFormController extends Controller
             'message' => 'Are done check your email inbox',
         ]);
     }
+
 }

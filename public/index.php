@@ -4,6 +4,10 @@ use app\http\EventFormController;
 
 require __DIR__.'/../vendor/autoload.php';
 
+session_start();
+
+
+
 $ctrl = new EventFormController();
 
 ob_start();
