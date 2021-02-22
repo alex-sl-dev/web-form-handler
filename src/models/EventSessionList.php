@@ -17,11 +17,11 @@ use JsonSerializable;
  */
 class EventSessionList implements Iterator, Countable, JsonSerializable
 {
+    /** @var array|int[] */
+    private static array $sessionStartHours = [14, 17, 20, 23];
+
     /** @var EventSession[] */
     private array $items;
-
-    /** @var array|int[]  */
-    private static array $sessionStartHours = [14, 17, 20, 23];
 
     /**
      * @param WeatherList $weatherList
@@ -31,7 +31,8 @@ class EventSessionList implements Iterator, Countable, JsonSerializable
     public static function createFutureSessions(
         WeatherList $weatherList,
         bool $ignoreWeather = false
-    ) : EventSessionList{
+    ): EventSessionList
+    {
         $instance = new self();
 
         for ($day = 0; $day < 5; $day++) {
@@ -93,8 +94,8 @@ class EventSessionList implements Iterator, Countable, JsonSerializable
         if (!empty($this->items)) {
             foreach ($this->items as $item) {
                 $response[] = [
-                    'dt' => $item->getStartTime()->getTimestamp(),
-                    'label' => $item->getStartTime()->format('l jS \of F Y h:i:s A'),
+                    'dt' => $item->getDateTime()->getTimestamp(),
+                    'label' => $item->getDateTime()->format('l jS \of F Y h:i:s A'),
                 ];
             }
         }

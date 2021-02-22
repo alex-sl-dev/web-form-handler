@@ -10,10 +10,10 @@ namespace app\models;
  */
 class Weather
 {
-    /** @var int  */
+    /** @var int */
     protected int $dt;
 
-    /** @var \stdClass  */
+    /** @var \stdClass */
     protected \stdClass $cloud;
 
     /**

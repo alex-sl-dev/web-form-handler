@@ -5,7 +5,6 @@ namespace app\models;
 
 
 use DateTime;
-
 use Swift_Message;
 
 
@@ -27,13 +26,20 @@ class MailMessage extends Swift_Message
     /** @var DateTime */
     protected DateTime $eventSession;
 
-
+    /**
+     * MailMessage constructor.
+     * @param string $name
+     * @param string $email
+     * @param Town $town
+     * @param DateTime $eventSession
+     */
     public function __construct(
         string $name,
         string $email,
         Town $town,
         DateTime $eventSession
-    ){
+    )
+    {
         $this->eventSession = $eventSession;
 
         parent::__construct('Registration For The Star Event');

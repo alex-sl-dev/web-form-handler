@@ -10,7 +10,6 @@ use app\models\TownsRepository;
 use app\services\MailTransportService;
 use app\services\WeatherProviderService;
 use Exception;
-use PDO;
 
 
 /**
@@ -50,7 +49,7 @@ class EventFormController extends Controller
         try {
             $townsList = $this->townsRepository->getAll();
             //var_dump($townsList);
-            $this->render('form', [
+            $this->renderHTML('form', [
                 EventForm::$NAME => '',
                 EventForm::$EMAIL => '',
                 EventForm::$TOWN => '',
@@ -61,7 +60,7 @@ class EventFormController extends Controller
             ]);
         } catch (Exception $e) {
             // non exists Logger::error($e);
-            $this->render('error', ['message' => $e->getMessage()]);
+            $this->renderHTML('error', ['message' => $e->getMessage()]);
         }
     }
 
@@ -72,7 +71,7 @@ class EventFormController extends Controller
     {
         $this->eventForm->handleRequest($_POST);
 
-        if (!$this->validCSRF()) {
+        if (!$this->isValidCSRF()) {
             $this->renderJSON(['error' => 'Not valid CSRF Token']);
             return;
         }
@@ -110,14 +109,14 @@ class EventFormController extends Controller
             $this->renderJSON($town->getEventSessions());
         } catch (Exception $exception) {
             // non exists Logger::error($e);
-            $this->render('error', ['message' => $exception->getMessage()]);
+            $this->renderHTML('error', ['message' => $exception->getMessage()]);
         }
     }
 
     public function donePageHandler()
     {
-        $this->render('done', [
-            'message' => 'Are done check your email inbox',
+        $this->renderHTML('done', [
+            'message' => 'Are done check your mail inbox',
         ]);
     }
 

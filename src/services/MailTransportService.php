@@ -3,9 +3,6 @@
 namespace app\services;
 
 use app\models\MailMessage;
-use Laminas\Mail;
-use Laminas\Mail\Transport\SmtpOptions;
-use Laminas\Mail\Transport\TransportInterface;
 use Swift_Mailer;
 use Swift_SmtpTransport;
 use Swift_Transport_SmtpAgent;
@@ -16,12 +13,14 @@ use Swift_Transport_SmtpAgent;
  */
 class MailTransportService
 {
-    /** @var Swift_Transport_SmtpAgent  */
+    /** @var Swift_Transport_SmtpAgent */
     protected Swift_Transport_SmtpAgent $transport;
 
+    /**
+     * MailTransportService constructor.
+     */
     public function __construct()
     {
-
         $iniFile = parse_ini_file(realpath(__DIR__ . "/../../config.ini"), true);
         $smtp = $iniFile['smtp'];
 
@@ -34,7 +33,7 @@ class MailTransportService
      * @param MailMessage $mailMessage
      * @return int
      */
-    public function send(MailMessage $mailMessage)
+    public function send(MailMessage $mailMessage): int
     {
         $mailer = new Swift_Mailer($this->transport);
 

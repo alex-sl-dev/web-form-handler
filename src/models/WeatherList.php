@@ -20,7 +20,7 @@ class WeatherList
      */
     public function __construct(array $list)
     {
-        $this->list = array_map(function ($item){
+        $this->list = array_map(function ($item) {
             return new Weather($item->dt, $item->clouds);
         }, $list);
     }

@@ -14,10 +14,7 @@ use DateTime;
 class EventSession
 {
     /** @var DateTime  */
-    protected DateTime $startTime;
-
-    /** @var int  */
-    protected int $day;
+    protected DateTime $dateTime;
 
     /** @var Weather  */
     protected Weather $weather;
@@ -25,30 +22,26 @@ class EventSession
     /**
      * EventSession constructor.
      * @param $weather
-     * @param int $startTime
+     * @param int $hour
      * @param int $day
      */
-    public function __construct($weather, int $startTime, $day = 0)
+    public function __construct($weather, int $hour, $day = 0)
     {
         $this->weather = $weather;
 
-
-        // a bit ugly
         $date = date("Y-m-d");
-        $this->startTime = new DateTime("{$date}T{$startTime}:00:00");
-
-        $this->day = $day;
+        $this->dateTime = new DateTime("{$date}T{$hour}:00:00");
 
         if ($day) {
-            $this->startTime->add(new DateInterval("P{$day}D"));
+            $this->dateTime->add(new DateInterval("P{$day}D"));
         }
     }
 
     /**
      * @return DateTime
      */
-    public function getStartTime(): DateTime
+    public function getDateTime(): DateTime
     {
-        return $this->startTime;
+        return $this->dateTime;
     }
 }

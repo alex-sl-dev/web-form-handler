@@ -20,7 +20,7 @@ class Controller
      * @param $args - Associative array of variables to pass to the template file.
      * @return void - Output of the template file. Likely HTML.
      */
-    protected function render($file, $args)
+    protected function renderHTML($file, $args)
     {
         $filePath = __DIR__ . '/../tmpl/' . $file . '.phtml';
 
@@ -41,6 +41,9 @@ class Controller
         print ob_get_clean();
     }
 
+    /**
+     * @param $json
+     */
     protected function renderJSON($json): void
     {
         header('Content-Type: application/json');
@@ -65,7 +68,7 @@ class Controller
     /**
      * @return bool
      */
-    protected function validCSRF(): bool
+    protected function isValidCSRF(): bool
     {
         return (isset($_POST['csrf_token']) && $_POST['csrf_token'] === $_SESSION['csrf_token']);
     }

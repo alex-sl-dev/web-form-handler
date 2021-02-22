@@ -6,6 +6,7 @@ namespace app\services;
 
 use app\models\WeatherList;
 
+
 /**
  * Class WeatherProviderService
  * @package app\services
@@ -28,7 +29,6 @@ class WeatherProviderService
     {
         $iniFile = parse_ini_file(realpath(__DIR__ . "/../../config.ini"), true);
         $this->weatherProviderKey = $iniFile['weatherProvider']['key'];
-
     }
 
     /**
@@ -53,6 +53,6 @@ class WeatherProviderService
      */
     public function getResponse(): WeatherList
     {
-        return new WeatherList((json_decode($this->curlResponse))->list) ;
+        return new WeatherList((json_decode($this->curlResponse))->list);
     }
 }

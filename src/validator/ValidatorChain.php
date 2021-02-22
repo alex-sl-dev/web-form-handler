@@ -10,8 +10,7 @@ namespace app\validator;
  */
 class ValidatorChain
 {
-
-    /** @var ValidatorInterface[]  */
+    /** @var ValidatorInterface[] */
     protected array $rules;
 
     /** @var array */
@@ -33,10 +32,12 @@ class ValidatorChain
     public function invoke(array $post): void
     {
         foreach ($this->rules as $fieldName => $validators) {
+
             if (!array_key_exists($fieldName, $post)) {
                 $this->errors[$fieldName][] = (new RequiredValidator())->getErrorMessage();
                 continue;
             }
+
             array_walk($validators, function ($validator) use ($post, $fieldName) {
                 /** @var ValidatorInterface $validator */
                 if (is_string($validator)) {

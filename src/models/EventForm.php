@@ -37,14 +37,6 @@ class EventForm
     }
 
     /**
-     * @param array $post
-     */
-    public function setFormData(array $post)
-    {
-
-    }
-
-    /**
      * @return array
      */
     private function validationRules(): array
@@ -72,6 +64,14 @@ class EventForm
                 StringValidator::class
             ]
         ];
+
+    }
+
+    /**
+     * @param array $post
+     */
+    public function setFormData(array $post)
+    {
 
     }
 

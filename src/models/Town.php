@@ -39,6 +39,9 @@ class Town
         return $this->eventSessions;
     }
 
+    /**
+     * @param WeatherList $weatherList
+     */
     public function setWeatherForEventSession(WeatherList $weatherList)
     {
         $this->eventSessions = EventSessionList::createFutureSessions($weatherList);

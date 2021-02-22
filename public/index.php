@@ -2,10 +2,9 @@
 
 use app\http\EventFormController;
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 session_start();
-
 
 
 $ctrl = new EventFormController();
@@ -31,7 +30,7 @@ $output = ob_get_contents();
 ob_end_clean();
 
 
-if (strlen($output)){
+if (strlen($output)) {
     http_response_code(200);
     file_put_contents("php://output", $output);
 } else {
