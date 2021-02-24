@@ -5,10 +5,10 @@ namespace app\validator;
 
 
 /**
- * Class RequiredValidator
+ * Class Required
  * @package app\validator
  */
-class RequiredValidator implements ValidatorInterface
+class Required implements Validator
 {
 
     /**

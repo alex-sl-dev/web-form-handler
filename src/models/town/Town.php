@@ -1,8 +1,11 @@
 <?php
 
 
-namespace app\models;
+namespace app\models\town;
 
+
+use app\models\star_event\EventSessionList;
+use app\models\star_event\WeatherList;
 
 /**
  * Class Town

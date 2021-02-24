@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\models;
+namespace app\models\star_event;
 
 
 use Countable;

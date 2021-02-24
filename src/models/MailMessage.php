@@ -42,13 +42,13 @@ class MailMessage extends Swift_Message
     {
         $this->eventSession = $eventSession;
 
-        parent::__construct('Registration For The Star Event');
+        parent::__construct('Registration For The Star StarEvent');
 
         $body = "Hey {$name}, you’ve been registered to the star observers event in {$town->getTown()} ";
         $body .= "on {$this->eventSession->format('l jS \of F')} at {$this->eventSession->format('h')}!";
 
         $this->setBody($body);
-        $this->setFrom('sendmail@local.host', "The Star Event");
+        $this->setFrom('sendmail@local.host', "The Star StarEvent");
         $this->addTo($email, $name);
     }
 }

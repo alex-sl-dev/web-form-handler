@@ -11,13 +11,13 @@ use Swift_Transport_SmtpAgent;
  * Class SendMailService
  * @package app\services
  */
-class MailTransportService
+class MailTransport
 {
     /** @var Swift_Transport_SmtpAgent */
     protected Swift_Transport_SmtpAgent $transport;
 
     /**
-     * MailTransportService constructor.
+     * MailTransport constructor.
      */
     public function __construct()
     {

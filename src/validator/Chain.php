@@ -5,19 +5,19 @@ namespace app\validator;
 
 
 /**
- * Class ValidatorChain
+ * Class Chain
  * @package app\validator
  */
-class ValidatorChain
+class Chain
 {
-    /** @var ValidatorInterface[] */
+    /** @var Validator[] */
     protected array $rules;
 
     /** @var array */
     protected array $errors;
 
     /**
-     * ValidatorChain constructor.
+     * Chain constructor.
      * @param array[] $rules
      */
     public function __construct(array $rules)
@@ -34,12 +34,12 @@ class ValidatorChain
         foreach ($this->rules as $fieldName => $validators) {
 
             if (!array_key_exists($fieldName, $post)) {
-                $this->errors[$fieldName][] = (new RequiredValidator())->getErrorMessage();
+                $this->errors[$fieldName][] = (new Required())->getErrorMessage();
                 continue;
             }
 
             array_walk($validators, function ($validator) use ($post, $fieldName) {
-                /** @var ValidatorInterface $validator */
+                /** @var Validator $validator */
                 if (is_string($validator)) {
                     $validator = new $validator;
                 }

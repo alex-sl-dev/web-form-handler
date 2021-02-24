@@ -4,7 +4,7 @@
 namespace app\services;
 
 
-use app\models\WeatherList;
+use app\models\weather\WeatherList;
 
 
 /**

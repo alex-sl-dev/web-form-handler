@@ -5,10 +5,10 @@ namespace app\http;
 
 
 /**
- * Class Controller
+ * Class HttpRouteHandler
  * @package app
  */
-class Controller
+abstract class HttpRouteHandler
 {
 
     /**
@@ -26,6 +26,7 @@ class Controller
 
         // ensure the file exists
         if (!file_exists($filePath)) {
+
             return;
         }
 

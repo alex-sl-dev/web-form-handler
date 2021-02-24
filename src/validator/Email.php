@@ -4,10 +4,10 @@
 namespace app\validator;
 
 /**
- * Class EmailValidator
+ * Class Email
  * @package app\validator
  */
-class EmailValidator implements ValidatorInterface
+class Email implements Validator
 {
 
     /**

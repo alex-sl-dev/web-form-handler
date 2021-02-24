@@ -1,28 +1,28 @@
 <?php
 
-use app\http\EventFormController;
+use app\http\StarEventRoutes;
 
 require __DIR__ . '/../vendor/autoload.php';
 
 session_start();
 
 
-$ctrl = new EventFormController();
+$starEventRoutes = new StarEventRoutes();
 
 ob_start();
 
 switch ($_SERVER['REQUEST_URI']) {
     case '/event-sessions':
-        $ctrl->eventSessionsHandler();
+        $starEventRoutes->eventSessionsHandler();
         break;
     case '/submit-form':
-        $ctrl->submittedFormHandler();
+        $starEventRoutes->submittedFormHandler();
         break;
     case '/done':
-        $ctrl->donePageHandler();
+        $starEventRoutes->donePageHandler();
         break;
     default;
-        $ctrl->show();
+        $starEventRoutes->show();
         break;
 }
 

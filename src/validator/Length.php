@@ -4,10 +4,10 @@
 namespace app\validator;
 
 /**
- * Class LengthValidator
+ * Class Length
  * @package app\validator
  */
-class LengthValidator implements ValidatorInterface
+class Length implements Validator
 {
     /** @var int */
     protected int $rangeFrom;
@@ -17,9 +17,9 @@ class LengthValidator implements ValidatorInterface
     /**
      * @param int $from
      * @param int $to
-     * @return LengthValidator
+     * @return Length
      */
-    public static function range(int $from, int $to): LengthValidator
+    public static function range(int $from, int $to): Length
     {
         $instance = new self();
         $instance->rangeFrom = $from;

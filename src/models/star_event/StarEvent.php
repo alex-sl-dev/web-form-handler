@@ -1,22 +1,31 @@
 <?php
 
 
-namespace app\models;
+namespace app\models\star_event;
 
 
-use app\validator\EmailValidator;
-use app\validator\LengthValidator;
-use app\validator\RequiredValidator;
-use app\validator\StringValidator;
-use app\validator\ValidatorChain;
-
+use app\validator\Chain;
+use app\validator\Email;
+use app\validator\Length;
+use app\validator\Required;
+use app\validator\String;
 
 /**
- * Class EventForm
- * @package app\model
+ * Class StarEvent
+ * @package app\models\star_event
  */
-class EventForm
+class StarEvent
 {
+    protected string $name;
+
+    protected string $email;
+
+    protected string $town;
+
+    protected string $eventSession;
+
+    protected string $comment;
+
     public static string $NAME = 'name';
     public static string $EMAIL = 'email';
     public static string $TOWN = 'town';
@@ -24,16 +33,16 @@ class EventForm
     public static string $COMMENT = 'comment';
 
     /**
-     * @var ValidatorChain
+     * @var Chain
      */
-    protected ValidatorChain $formValidator;
+    protected Chain $formValidator;
 
     /**
-     * EventForm constructor.
+     * Form constructor.
      */
     public function __construct()
     {
-        $this->formValidator = new ValidatorChain($this->validationRules());
+        $this->formValidator = new Chain($this->validationRules());
     }
 
     /**
@@ -44,24 +53,24 @@ class EventForm
         return [
             // carefully of order
             self::$NAME => [
-                RequiredValidator::class,
-                LengthValidator::range(0, 50),
-                StringValidator::class
+                Required::class,
+                Length::range(0, 50),
+                String::class
             ],
             self::$EMAIL => [
-                RequiredValidator::class,
-                LengthValidator::range(0, 50),
-                EmailValidator::class
+                Required::class,
+                Length::range(0, 50),
+                Email::class
             ],
             self::$TOWN => [
-                RequiredValidator::class
+                Required::class
             ],
             self::$EVENT_SESSION => [
-                RequiredValidator::class
+                Required::class
             ],
             self::$COMMENT => [
-                LengthValidator::range(0, 200),
-                StringValidator::class
+                Length::range(0, 200),
+                String::class
             ]
         ];
 

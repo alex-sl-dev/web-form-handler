@@ -7,16 +7,16 @@ namespace app\http;
 use app\models\EventForm;
 use app\models\MailMessage;
 use app\models\TownsRepository;
-use app\services\MailTransportService;
+use app\services\MailTransport;
 use app\services\WeatherProviderService;
 use Exception;
 
 
 /**
- * Class EventFormController
+ * Class StarEventRoutes
  * @package app
  */
-class EventFormController extends Controller
+class StarEventRoutes extends HttpRouteHandler
 {
     /** @var EventForm */
     protected EventForm $eventForm;
@@ -27,18 +27,18 @@ class EventFormController extends Controller
     /** @var WeatherProviderService */
     private WeatherProviderService $weatherProvider;
 
-    /** @var MailTransportService */
-    private MailTransportService $transportService;
+    /** @var MailTransport */
+    private MailTransport $transportService;
 
     /**
-     * EventFormController constructor.
+     * StarEventRoutes constructor.
      */
     public function __construct()
     {
         $this->eventForm = new EventForm();
         $this->townsRepository = new TownsRepository();
         $this->weatherProvider = new WeatherProviderService();
-        $this->transportService = new MailTransportService();
+        $this->transportService = new MailTransport();
     }
 
     /**

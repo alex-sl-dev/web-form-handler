@@ -4,7 +4,7 @@
 namespace app\validator;
 
 
-interface ValidatorInterface
+interface Validator
 {
     public function valid(string $value) : bool;
 
