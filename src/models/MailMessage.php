@@ -4,6 +4,8 @@
 namespace app\models;
 
 
+
+use app\models\town\Town;
 use DateTime;
 use Swift_Message;
 

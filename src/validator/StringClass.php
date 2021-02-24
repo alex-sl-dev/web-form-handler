@@ -7,7 +7,7 @@ namespace app\validator;
  * Class String
  * @package app\validator
  */
-class String implements Validator
+class StringClass implements Validator
 {
 
     /**

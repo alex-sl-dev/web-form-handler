@@ -4,9 +4,9 @@
 namespace app\http;
 
 
-use app\models\EventForm;
+use app\models\star_event\Form;
 use app\models\MailMessage;
-use app\models\TownsRepository;
+use app\models\town\TownsRepository;
 use app\services\MailTransport;
 use app\services\WeatherProviderService;
 use Exception;
@@ -18,8 +18,8 @@ use Exception;
  */
 class StarEventRoutes extends HttpRouteHandler
 {
-    /** @var EventForm */
-    protected EventForm $eventForm;
+    /** @var Form */
+    protected Form $eventForm;
 
     /** @var TownsRepository */
     private TownsRepository $townsRepository;
@@ -35,7 +35,7 @@ class StarEventRoutes extends HttpRouteHandler
      */
     public function __construct()
     {
-        $this->eventForm = new EventForm();
+        $this->eventForm = new Form();
         $this->townsRepository = new TownsRepository();
         $this->weatherProvider = new WeatherProviderService();
         $this->transportService = new MailTransport();
@@ -48,13 +48,12 @@ class StarEventRoutes extends HttpRouteHandler
     {
         try {
             $townsList = $this->townsRepository->getAll();
-            //var_dump($townsList);
             $this->renderHTML('form', [
-                EventForm::$NAME => '',
-                EventForm::$EMAIL => '',
-                EventForm::$TOWN => '',
-                EventForm::$EVENT_SESSION => '',
-                EventForm::$COMMENT => '',
+                Form::$NAME => '',
+                Form::$EMAIL => '',
+                Form::$TOWN => '',
+                Form::$EVENT_SESSION => '',
+                Form::$COMMENT => '',
                 'townsList' => $townsList,
                 'csrf' => $this->generateCSRFToken(true)
             ]);

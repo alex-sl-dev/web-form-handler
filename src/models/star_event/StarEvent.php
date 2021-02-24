@@ -8,7 +8,7 @@ use app\validator\Chain;
 use app\validator\Email;
 use app\validator\Length;
 use app\validator\Required;
-use app\validator\String;
+use app\validator\StringClass;
 
 /**
  * Class StarEvent
@@ -55,7 +55,7 @@ class StarEvent
             self::$NAME => [
                 Required::class,
                 Length::range(0, 50),
-                String::class
+                StringClass::class
             ],
             self::$EMAIL => [
                 Required::class,
@@ -70,7 +70,7 @@ class StarEvent
             ],
             self::$COMMENT => [
                 Length::range(0, 200),
-                String::class
+                StringClass::class
             ]
         ];
 
