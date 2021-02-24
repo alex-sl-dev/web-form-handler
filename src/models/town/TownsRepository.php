@@ -28,7 +28,7 @@ class TownsRepository
 
         $stm->execute();
 
-        return TownsList::fromPDO($stm->fetchAll(PDO::FETCH_CLASS));
+        return TownsList::create($stm->fetchAll(PDO::FETCH_CLASS));
     }
 
     /**
@@ -45,7 +45,6 @@ class TownsRepository
         $stm = $db->prepare($sql);
         $stm->bindParam(':id', $id, PDO::PARAM_INT);
 
-        /// $stm->setFetchMode(PDO::FETCH_ASSOC, 'Town', ['id', 'town']);
         $stm->execute();
         $row = $stm->fetch(PDO::FETCH_ASSOC);
 

@@ -4,6 +4,8 @@
 namespace app\models\star_event;
 
 
+use stdClass;
+
 /**
  * Class Weather
  * @package app\model
@@ -13,15 +15,15 @@ class Weather
     /** @var int */
     protected int $dt;
 
-    /** @var \stdClass */
-    protected \stdClass $cloud;
+    /** @var stdClass */
+    protected stdClass $cloud;
 
     /**
      * Weather constructor.
      * @param int $dt
-     * @param \stdClass $cloud
+     * @param stdClass $cloud
      */
-    public function __construct(int $dt, \stdClass $cloud)
+    public function __construct(int $dt, stdClass $cloud)
     {
         $this->dt = $dt;
         $this->cloud = $cloud;
@@ -36,9 +38,9 @@ class Weather
     }
 
     /**
-     * @return \stdClass
+     * @return stdClass
      */
-    public function getCloud(): \stdClass
+    public function getCloud(): stdClass
     {
         return $this->cloud;
     }

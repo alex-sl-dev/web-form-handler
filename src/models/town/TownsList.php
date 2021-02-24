@@ -4,6 +4,7 @@
 namespace app\models\town;
 
 
+use app\models\star_event\CountableIteratorItemsTrait;
 use Countable;
 use Iterator;
 
@@ -15,8 +16,7 @@ use Iterator;
 class TownsList implements Iterator, Countable
 {
 
-    /** @var Town[] */
-    protected array $items;
+    use CountableIteratorItemsTrait;
 
     public function __construct($array)
     {
@@ -25,7 +25,7 @@ class TownsList implements Iterator, Countable
         }
     }
 
-    public static function fromPDO(array $fetched): self
+    public static function create(array $fetched): self
     {
         $records = [];
 
@@ -36,40 +36,4 @@ class TownsList implements Iterator, Countable
         return new self($records);
     }
 
-    public function getItems(): array
-    {
-        return $this->items;
-    }
-
-    public function current()// Uncaught TypeError:: Town
-    {
-        return current($this->items);
-    }
-
-    public function next()//Uncaught TypeError: : //Town
-    {
-        return next($this->items);
-    }
-
-    public function key(): int
-    {
-        return key($this->items);
-    }
-
-    public function valid(): bool
-    {
-        $key = key($this->items);
-
-        return ($key !== NULL && $key !== FALSE);
-    }
-
-    public function rewind(): void
-    {
-        reset($this->items);
-    }
-
-    public function count(): int
-    {
-        return count($this->items);
-    }
 }

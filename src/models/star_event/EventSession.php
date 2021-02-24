@@ -13,6 +13,8 @@ use DateTime;
  */
 class EventSession
 {
+    public static string $DEFAULT_FORMAT_DATETIME = "l jS \of F Y h:i:s A";
+
     /** @var DateTime  */
     protected DateTime $dateTime;
 
@@ -21,13 +23,15 @@ class EventSession
 
     /**
      * EventSession constructor.
-     * @param $weather
-     * @param int $hour
-     * @param int $day
+     * @param Weather $weather
+     * @param DateTime $dateTime
      */
-    public function __construct($weather, int $hour, $day = 0)
+    public function __construct(Weather $weather, DateTime $dateTime)
     {
         $this->weather = $weather;
+        $this->dateTime = $dateTime;
+
+        /*
 
         $date = date("Y-m-d");
         $this->dateTime = new DateTime("{$date}T{$hour}:00:00");
@@ -35,7 +39,9 @@ class EventSession
         if ($day) {
             $this->dateTime->add(new DateInterval("P{$day}D"));
         }
+        */
     }
+
 
     /**
      * @return DateTime

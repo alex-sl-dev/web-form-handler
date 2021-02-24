@@ -4,8 +4,11 @@
 namespace app\http;
 
 
+use app\models\star_event\EventSession;
 use app\models\star_event\Form;
 use app\models\MailMessage;
+use app\models\star_event\StarEvent;
+use app\models\town\Town;
 use app\models\town\TownsRepository;
 use app\services\MailTransport;
 use app\services\WeatherProviderService;
@@ -18,8 +21,6 @@ use Exception;
  */
 class StarEventRoutes extends HttpRouteHandler
 {
-    /** @var Form */
-    protected Form $eventForm;
 
     /** @var TownsRepository */
     private TownsRepository $townsRepository;
@@ -35,7 +36,6 @@ class StarEventRoutes extends HttpRouteHandler
      */
     public function __construct()
     {
-        $this->eventForm = new Form();
         $this->townsRepository = new TownsRepository();
         $this->weatherProvider = new WeatherProviderService();
         $this->transportService = new MailTransport();
@@ -52,7 +52,7 @@ class StarEventRoutes extends HttpRouteHandler
                 Form::$NAME => '',
                 Form::$EMAIL => '',
                 Form::$TOWN => '',
-                Form::$EVENT_SESSION => '',
+                Form::$EVENT => '',
                 Form::$COMMENT => '',
                 'townsList' => $townsList,
                 'csrf' => $this->generateCSRFToken(true)
@@ -68,25 +68,54 @@ class StarEventRoutes extends HttpRouteHandler
      */
     public function submittedFormHandler()
     {
-        $this->eventForm->handleRequest($_POST);
-
         if (!$this->isValidCSRF()) {
             $this->renderJSON(['error' => 'Not valid CSRF Token']);
             return;
         }
 
-        if (!$this->eventForm->hasErrors() && boolval($_POST['submit'])) {
-            $mail = new MailMessage(
-                $_POST['name'],
-                $_POST['email'],
-                $this->townsRepository->getById($_POST['town']),
-                (new \DateTime())->setTimestamp($_POST['event-session'])
+        if ($_POST[StarEvent::$TOWN]) {
+
+            $town = $this->townsRepository->getById($_POST[StarEvent::$TOWN]);
+            $this->weatherProvider->fetch($town->getTown());
+            $weatherList = $this->weatherProvider->getResponse();
+
+            // @todo Required some cache
+
+            $weather = $weatherList->getFirst();
+            $time = (new \DateTime())->setTimestamp($weather->getDt());
+
+            $starEvent = new StarEvent(
+                $_POST[StarEvent::$NAME],
+                $_POST[StarEvent::$EMAIL],
+                $town,
+                new EventSession($weather, $time),
+                $_POST[StarEvent::$COMMENT]
             );
-            $this->transportService->send($mail);
-            $this->renderJSON(['status' => 'done']);
-        } else {
-            $this->renderJSON($this->eventForm->getErrors());
+
+            $this->renderJSON($starEvent->getErrors());
+
+            // @todo Save starEvent
+
+            /*
+            if (empty($starEvent->getErrors()) && boolval($_POST['submit'])) {
+                $mail = new MailMessage(
+                    $_POST['name'],
+                    $_POST['email'],
+                    $this->townsRepository->getById($_POST['town']),
+                    (new \DateTime())->setTimestamp($_POST['event-session'])
+                );
+                $this->transportService->send($mail);
+
+                $this->renderJSON(['status' => 'done']);
+            } else {
+
+            }*/
+
         }
+        else {
+            $this->renderJSON(['status' => 'validate']);
+        }
+
     }
 
     /**
@@ -104,10 +133,10 @@ class StarEventRoutes extends HttpRouteHandler
         try {
             $town = $this->townsRepository->getById($input->selectedTown);
             $this->weatherProvider->fetch($town->getTown());
-            $town->setWeatherForEventSession($this->weatherProvider->getResponse());
+            $town->initializeEventSessions($this->weatherProvider->getResponse());
+
             $this->renderJSON($town->getEventSessions());
         } catch (Exception $exception) {
-            // non exists Logger::error($e);
             $this->renderHTML('error', ['message' => $exception->getMessage()]);
         }
     }

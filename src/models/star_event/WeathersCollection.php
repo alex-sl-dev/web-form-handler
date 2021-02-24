@@ -11,8 +11,9 @@ use DomainException;
  * Class WeatherList
  * @package app\model
  */
-class WeatherList
+class WeathersCollection
 {
+
     /** @var Weather[] */
     protected array $list;
 
@@ -33,6 +34,7 @@ class WeatherList
      */
     public function getByTime(int $timestamp): Weather
     {
+        var_dump($timestamp);
         foreach ($this->list as $item) {
             if ($item->getDt() === $timestamp) {
                 return $item;
@@ -40,5 +42,10 @@ class WeatherList
         }
 
         throw new DomainException('Can\'n find weather data for event session by time');
+    }
+
+    public function getFirst(): Weather
+    {
+        return $this->list[0];
     }
 }

@@ -4,11 +4,13 @@
 namespace app\models\star_event;
 
 
+use app\models\town\Town;
 use app\validator\Chain;
 use app\validator\Email;
 use app\validator\Length;
 use app\validator\Required;
 use app\validator\StringClass;
+use DomainException;
 
 /**
  * Class StarEvent
@@ -16,33 +18,50 @@ use app\validator\StringClass;
  */
 class StarEvent
 {
-    protected string $name;
-
-    protected string $email;
-
-    protected string $town;
-
-    protected string $eventSession;
-
-    protected string $comment;
-
     public static string $NAME = 'name';
     public static string $EMAIL = 'email';
     public static string $TOWN = 'town';
-    public static string $EVENT_SESSION = 'event-session';
+    public static string $EVENT = 'event-session';
     public static string $COMMENT = 'comment';
 
-    /**
-     * @var Chain
-     */
-    protected Chain $formValidator;
+    /** @var string */
+    protected string $name;
+    /** @var string */
+    protected string $email;
+    /** @var Town */
+    protected Town $town;
+    /** @var EventSession */
+    protected EventSession $eventSession;
+    /** @var string */
+    protected string $comment;
+    /** @var Chain */
+    protected Chain $validator;
 
     /**
      * Form constructor.
+     * @param string $name
+     * @param string $email
+     * @param Town $town
+     * @param EventSession $eventSession
+     * @param string $comment
      */
-    public function __construct()
+    public function __construct(
+        string $name,
+        string $email,
+        Town $town,
+        EventSession $eventSession,
+        string $comment
+    )
     {
-        $this->formValidator = new Chain($this->validationRules());
+        $this->name = $name;
+        $this->email = $email;
+        $this->town = $town;
+        $this->eventSession = $eventSession;
+        $this->comment = $comment;
+
+        $this->validator = new Chain($this->validationRules(), $this->toArray(true));
+
+        $this->hasErrors();
     }
 
     /**
@@ -65,7 +84,7 @@ class StarEvent
             self::$TOWN => [
                 Required::class
             ],
-            self::$EVENT_SESSION => [
+            self::$EVENT => [
                 Required::class
             ],
             self::$COMMENT => [
@@ -73,23 +92,34 @@ class StarEvent
                 StringClass::class
             ]
         ];
-
     }
 
     /**
-     * @param array $post
+     * @param bool $force
+     * @return string[]
      */
-    public function setFormData(array $post)
+    public function toArray($force = false): array
     {
+        if ($force || empty($this->hasErrors())) {
 
+            return [
+                self::$NAME => $this->name,
+                self::$EMAIL => $this->email,
+                self::$TOWN => $this->town->getTown(),
+                self::$EVENT => $this->eventSession->getDateTime()->getTimestamp(),
+                self::$COMMENT => $this->comment
+            ];
+        }
+
+        throw new DomainCreationException("Can't serialise:" . __CLASS__);
     }
 
     /**
-     * @param array $post
+     * @return bool
      */
-    public function handleRequest(array $post)
+    private function hasErrors(): bool
     {
-        $this->formValidator->invoke($post);
+        return $this->validator->hasErrors();
     }
 
     /**
@@ -97,14 +127,6 @@ class StarEvent
      */
     public function getErrors(): array
     {
-        return $this->formValidator->getErrors();
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasErrors(): bool
-    {
-        return boolval(count($this->formValidator->getErrors()));
+        return $this->validator->getErrors();
     }
 }

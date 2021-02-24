@@ -4,8 +4,8 @@
 namespace app\models\town;
 
 
-use app\models\star_event\EventSessionList;
-use app\models\star_event\WeatherList;
+use app\models\star_event\EventSessions;
+use app\models\star_event\WeathersCollection;
 
 /**
  * Class Town
@@ -15,13 +15,12 @@ class Town
 {
     /** @var string */
     private string $town;
+
     /** @var int */
     private int $id;
 
-    /**
-     * @var EventSessionList
-     */
-    private EventSessionList $eventSessions;
+    /** @var EventSessions */
+    private EventSessions $eventSessions;
 
     /**
      * Town constructor.
@@ -35,19 +34,19 @@ class Town
     }
 
     /**
-     * @return EventSessionList
+     * @return EventSessions
      */
-    public function getEventSessions(): EventSessionList
+    public function getEventSessions(): EventSessions
     {
         return $this->eventSessions;
     }
 
     /**
-     * @param WeatherList $weatherList
+     * @param WeathersCollection $weatherList
      */
-    public function setWeatherForEventSession(WeatherList $weatherList)
+    public function initializeEventSessions(WeathersCollection $weatherList)
     {
-        $this->eventSessions = EventSessionList::createFutureSessions($weatherList);
+        $this->eventSessions = EventSessions::createFutureSessions($weatherList);
     }
 
     /**

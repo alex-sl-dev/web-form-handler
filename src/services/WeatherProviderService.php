@@ -4,7 +4,7 @@
 namespace app\services;
 
 
-use app\models\star_event\WeatherList;
+use app\models\star_event\WeathersCollection;
 
 
 /**
@@ -49,10 +49,10 @@ class WeatherProviderService
     }
 
     /**
-     * @return WeatherList
+     * @return WeathersCollection
      */
-    public function getResponse(): WeatherList
+    public function getResponse(): WeathersCollection
     {
-        return new WeatherList((json_decode($this->curlResponse))->list);
+        return new WeathersCollection((json_decode($this->curlResponse))->list);
     }
 }
