@@ -28,7 +28,7 @@ class TownsRepository
 
         $stm->execute();
 
-        return TownsList::create($stm->fetchAll(PDO::FETCH_CLASS));
+        return new TownsList($stm->fetchAll(PDO::FETCH_CLASS));
     }
 
     /**

@@ -38,9 +38,11 @@ class WeatherProviderService
      */
     public function fetch(string $town, $force = false): void
     {
+        /*
         if ($this->curlResponse && $force == false) {
             return;
         }
+        */
 
         $params = [
             'q' => $town, //. ', EE',

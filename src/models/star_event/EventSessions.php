@@ -25,18 +25,9 @@ class EventSessions implements iterator, countable, JsonSerializable
     private static array $EVENT_HOURS = [14, 17, 20, 23];
 
     /**
-     * @param Town $town
-     * @return EventSessions
      */
-    public function __constructor(
-        Town $town
-    ): EventSessions
+    public function __construct()
     {
-
-        $weatherProvider = new WeatherProviderService();
-        $weatherProvider->fetch($town->getTown());
-        $weatherList = $weatherProvider->getWeatherCollection();
-
         for ($day = 0; $day < 5; $day++) {
             foreach (EventSessions::$EVENT_HOURS as $hour) {
                 $offsetTime = mktime($hour, null, null,
@@ -44,15 +35,11 @@ class EventSessions implements iterator, countable, JsonSerializable
                     (new DateTime())->add(new DateInterval("P{$day}D"))->format('j'),
                     (new DateTime())->format('Y'),
                 );
-                $weather = $weatherList->getByTime($offsetTime);
-                if ($weather->getCloud()->all < 20) {
-                    $this->items[] = new EventSession(
-                        (new DateTime('now'))->setTimestamp($offsetTime)
-                    );
-                }
+                $this->items[] = new EventSession(
+                    (new DateTime('now'))->setTimestamp($offsetTime)
+                );
             }
         }
-
     }
 
     /**
@@ -60,22 +47,45 @@ class EventSessions implements iterator, countable, JsonSerializable
      */
     public function jsonSerialize(): array
     {
-        $response = [];
+        $json = [];
 
         if (!empty($this->items)) {
             foreach ($this->items as $item) {
                 /** @var EventSession $item */
-                $response[] = [
+                $json[] = [
                     'dt' => $item->getDateTime()->getTimestamp(),
                     'label' => $item->getDateTime()->format(EventSession::$DEFAULT_FORMAT_DATETIME),
                 ];
             }
         }
 
-        if (empty($response)) {
-            throw new DomainCreationException("Can't serialise:" . __CLASS__);
+        if (empty($json)) {
+            // todo cont catch correctly throw new DomainCreationException("Can't serialise: " . __CLASS__);
         }
 
-        return $response;
+        return $json;
+    }
+
+    public function getSunnySessions(Town $town): EventSessions
+    {
+        $weatherService = new WeatherProviderService();
+        $weatherService->fetch($town->getTown());
+        $weathersCollection = $weatherService->getWeatherCollection();
+
+        $filtered = [];
+
+        /** @var EventSession $item */
+        foreach ($this->items as $item) {
+            // @todo fix by time $weather = $weathersCollection->getByTime($item->getDateTime()->getTimestamp());
+            $weather = $weathersCollection->getFirst();
+
+            if ($weather->getCloud()->all < 50) {
+                $filtered[] = $item;
+            }
+        }
+
+        $this->items = $filtered;
+
+        return $this;
     }
 }

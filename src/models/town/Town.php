@@ -32,15 +32,16 @@ class Town
     {
         $this->id = $id;
         $this->town = $town;
+
         $this->eventSessions = new EventSessions();
     }
 
     /**
      * @return EventSessions
      */
-    public function getEventSessions(): EventSessions
+    public function getSunnyEventSessions(): EventSessions
     {
-        return $this->eventSessions;
+        return $this->eventSessions->getSunnySessions($this);
     }
 
     /**

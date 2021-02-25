@@ -18,22 +18,12 @@ class TownsList implements Iterator, Countable
 
     use CountableIteratorItemsTrait;
 
-    public function __construct($array)
+    public function __construct(array $items)
     {
-        if (is_array($array)) {
-            $this->items = $array;
+        $this->items = [];
+
+        foreach ($items as $record) {
+            array_push($this->items, new Town($record->id, $record->town));
         }
     }
-
-    public static function create(array $fetched): self
-    {
-        $records = [];
-
-        foreach ($fetched as $record) {
-            array_push($records, new Town($record->id, $record->town));
-        }
-
-        return new self($records);
-    }
-
 }

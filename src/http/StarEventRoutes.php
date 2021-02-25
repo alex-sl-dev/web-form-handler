@@ -126,10 +126,7 @@ class StarEventRoutes extends HttpRouteHandler
 
         try {
             $town = $this->townsRepository->getById($input->selectedTown);
-            $this->weatherProvider->fetch($town->getTown());
-            $town->initializeEventSessions($this->weatherProvider->getWeatherCollection());
-
-            $this->renderJSON($town->getEventSessions());
+            $this->renderJSON($town->getSunnyEventSessions());
         } catch (Exception $exception) {
             $this->renderHTML('error', ['message' => $exception->getMessage()]);
         }
