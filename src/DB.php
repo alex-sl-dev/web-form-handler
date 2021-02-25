@@ -19,19 +19,8 @@ use PDOException;
 class DB
 {
 
-    /** @var PDO */
     protected static PDO $instance;
 
-    /**
-     * DB constructor.
-     */
-    protected function __construct()
-    {
-    }
-
-    /**
-     * @return void
-     */
     public static function setCharsetEncoding(): void
     {
         if (self::$instance == null) {
@@ -45,9 +34,6 @@ class DB
 			SET character_set_results=utf8");
     }
 
-    /**
-     * @return PDO
-     */
     public static function getInstance(): PDO
     {
         if (empty(self::$instance)) {

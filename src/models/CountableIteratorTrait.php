@@ -1,10 +1,10 @@
 <?php
 
 
-namespace app\models\star_event;
+namespace app\models;
 
 
-trait CountableIteratorItemsTrait
+trait CountableIteratorTrait
 {
     /** @var array[] */
     private array $items;

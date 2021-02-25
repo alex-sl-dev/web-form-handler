@@ -19,21 +19,11 @@ use Exception;
  */
 class StarEventRoutes extends HttpRouteHandler
 {
-    /** @var TownsRepository */
     private TownsRepository $townsRepository;
-
-    /** @var WeatherProviderService */
     private WeatherProviderService $weatherProvider;
-
-    /** @var MailTransport */
     private MailTransport $mailTransport;
-
-    /** @var EventSessionRepository */
     private EventSessionRepository $eventSessionRepository;
 
-    /**
-     * StarEventRoutes constructor.
-     */
     public function __construct()
     {
         $this->townsRepository = new TownsRepository();
@@ -54,7 +44,7 @@ class StarEventRoutes extends HttpRouteHandler
                 Form::$EVENT => '',
                 Form::$COMMENT => '',
                 'townsList' => $townsList,
-                'csrf' => $this->generateCSRFToken(true)
+                'csrf' => $this->generateCSRFToken()
             ]);
         } catch (Exception $e) {
             // non exists Logger::error($e);
@@ -97,8 +87,9 @@ class StarEventRoutes extends HttpRouteHandler
 
             $this->renderJSON(['status' => 'done']);
             */
-            $this->renderJSON($starEvent->getErrors());
         }
+
+        $this->renderJSON($starEvent->getErrors());
     }
 
     public function eventSessionsHandler()

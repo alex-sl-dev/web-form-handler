@@ -17,3 +17,15 @@ INSERT INTO test.towns (id, town) VALUES (7, 'Põlva');
 INSERT INTO test.towns (id, town) VALUES (1, 'Tallinn');
 INSERT INTO test.towns (id, town) VALUES (2, 'Tartu');
 INSERT INTO test.towns (id, town) VALUES (8, 'Valga');
+
+create table star_event_registrations
+(
+    id            int auto_increment
+        primary key,
+    name          varchar(55)  not null,
+    email         varchar(55)  not null,
+    town_fk       int          not null,
+    event_session int          not null,
+    comment       varchar(200) not null
+);
+

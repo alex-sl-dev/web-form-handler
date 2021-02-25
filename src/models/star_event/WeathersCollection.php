@@ -13,14 +13,9 @@ use DomainException;
  */
 class WeathersCollection
 {
-
     /** @var Weather[] */
     protected array $list;
 
-    /**
-     * WeatherList constructor.
-     * @param array $list
-     */
     public function __construct(array $list)
     {
         $this->list = array_map(function ($item) {
@@ -28,13 +23,8 @@ class WeathersCollection
         }, $list);
     }
 
-    /**
-     * @param int $timestamp
-     * @return Weather
-     */
     public function getByTime(int $timestamp): Weather
     {
-        var_dump($timestamp);
         foreach ($this->list as $item) {
             if ($item->getDt() === $timestamp) {
                 return $item;

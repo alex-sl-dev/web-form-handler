@@ -4,7 +4,7 @@
 namespace app\models\town;
 
 
-use app\models\star_event\CountableIteratorItemsTrait;
+use app\models\CountableIteratorTrait;
 use Countable;
 use Iterator;
 
@@ -16,12 +16,11 @@ use Iterator;
 class TownsList implements Iterator, Countable
 {
 
-    use CountableIteratorItemsTrait;
+    use CountableIteratorTrait;
 
     public function __construct(array $items)
     {
         $this->items = [];
-
         foreach ($items as $record) {
             array_push($this->items, new Town($record->id, $record->town));
         }

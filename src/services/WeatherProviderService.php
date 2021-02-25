@@ -13,18 +13,11 @@ use app\models\star_event\WeathersCollection;
  */
 class WeatherProviderService
 {
-    /** @var string */
     protected static string $URL = "api.openweathermap.org/data/2.5/forecast";
-    /** @var string */
     protected string $weatherProviderKey;
-    /** @var string */
     protected string $curlResponse;
-    /** @var string */
     protected string $town;
 
-    /**
-     * WeatherProviderService constructor.
-     */
     public function __construct()
     {
         $iniFile = parse_ini_file(realpath(__DIR__ . "/../../config.ini"), true);
@@ -32,17 +25,11 @@ class WeatherProviderService
         $this->curlResponse = '';
     }
 
-    /**
-     * @param string $town
-     * @param bool $force
-     */
     public function fetch(string $town, $force = false): void
     {
-        /*
         if ($this->curlResponse && $force == false) {
             return;
         }
-        */
 
         $params = [
             'q' => $town, //. ', EE',
@@ -56,9 +43,6 @@ class WeatherProviderService
         curl_close($ch);
     }
 
-    /**
-     * @return WeathersCollection
-     */
     public function getWeatherCollection(): WeathersCollection
     {
         return new WeathersCollection((json_decode($this->curlResponse))->list);

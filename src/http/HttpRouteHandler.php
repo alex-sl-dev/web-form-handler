@@ -20,55 +20,32 @@ abstract class HttpRouteHandler
      * @param $args - Associative array of variables to pass to the template file.
      * @return void - Output of the template file. Likely HTML.
      */
-    protected function renderHTML($file, $args)
+    protected function renderHTML(string $file, array $args)
     {
         $filePath = __DIR__ . '/../tmpl/' . $file . '.phtml';
-
-        // ensure the file exists
-        if (!file_exists($filePath)) {
-
-            return;
-        }
-
-        // Make values in the associative array easier to access by extracting them
-        if (is_array($args)) {
-            extract($args);
-        }
-
-        // buffer the output (including the file is "output")
+        if (!file_exists($filePath)) { return; }
+        if (is_array($args)) { extract($args); }
         ob_start();
         include $filePath;
-
         print ob_get_clean();
     }
 
-    /**
-     * @param $json
-     */
-    protected function renderJSON($json): void
+    protected function renderJSON($data): void
     {
         header('Content-Type: application/json');
-
-        print json_encode($json);
+        print json_encode($data);
     }
 
-    /**
-     * https://gist.github.com/ziadoz/3454607
-     * @param bool $force
-     * @return mixed|string
-     */
-    protected function generateCSRFToken($force = false): string
+    protected function generateCSRFToken(): string
     {
-        if (!isset($_SESSION['csrf_token']) || $force) {
+        if (!isset($_SESSION['csrf_token'])) {
+            /** https://gist.github.com/ziadoz/3454607 */
             $_SESSION['csrf_token'] = base64_encode(openssl_random_pseudo_bytes(32));
         }
 
         return $_SESSION["csrf_token"];
     }
 
-    /**
-     * @return bool
-     */
     protected function isValidCSRF(): bool
     {
         return (isset($_POST['csrf_token']) && $_POST['csrf_token'] === $_SESSION['csrf_token']);

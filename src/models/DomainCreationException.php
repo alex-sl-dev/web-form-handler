@@ -1,10 +1,12 @@
 <?php
 
 
-namespace app\models\star_event;
+namespace app\models;
 
 
 use DomainException;
+
+
 
 class DomainCreationException extends DomainException
 {

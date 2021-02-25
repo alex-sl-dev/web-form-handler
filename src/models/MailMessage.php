@@ -16,25 +16,11 @@ use Swift_Message;
  */
 class MailMessage extends Swift_Message
 {
-    /** @var string */
     protected string $name;
-
-    /** @var string */
     protected string $email;
-
-    /** @var Town */
     protected Town $town;
-
-    /** @var DateTime */
     protected DateTime $eventSession;
 
-    /**
-     * MailMessage constructor.
-     * @param string $name
-     * @param string $email
-     * @param Town $town
-     * @param DateTime $eventSession
-     */
     public function __construct(
         string $name,
         string $email,

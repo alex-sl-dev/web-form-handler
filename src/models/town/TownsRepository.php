@@ -15,9 +15,6 @@ use PDO;
 class TownsRepository
 {
 
-    /**
-     * @return TownsList
-     */
     public function getAll(): TownsList
     {
         $db = DB::getInstance();
@@ -31,10 +28,6 @@ class TownsRepository
         return new TownsList($stm->fetchAll(PDO::FETCH_CLASS));
     }
 
-    /**
-     * @param string $id
-     * @return Town
-     */
     public function getById(string $id): Town
     {
         $db = DB::getInstance();
@@ -44,8 +37,8 @@ class TownsRepository
 
         $stm = $db->prepare($sql);
         $stm->bindParam(':id', $id, PDO::PARAM_INT);
-
         $stm->execute();
+
         $row = $stm->fetch(PDO::FETCH_ASSOC);
 
         return new Town($row['id'], $row['town']);

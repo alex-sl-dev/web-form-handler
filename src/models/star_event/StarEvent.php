@@ -118,28 +118,18 @@ class StarEvent
         return $this->email;
     }
 
-    /**
-     * @return Town
-     */
     public function getTown(): Town
     {
         return $this->town;
     }
 
-    /**
-     * @return EventSession
-     */
     public function getEventSession(): EventSession
     {
         return $this->eventSession;
     }
 
-    /**
-     * @return string
-     */
     public function getComment(): string
     {
         return $this->comment;
     }
-
 }

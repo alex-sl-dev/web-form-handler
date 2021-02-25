@@ -4,38 +4,24 @@
 namespace app\validator;
 
 
-use app\models\star_event\DomainCreationException;
-
 /**
  * Class ValidatorChain
  * @package app\validator
  */
 class ValidatorChain
 {
-    /** @var Validator[] */
     protected array $rules;
-    /** @var array */
     protected array $errors;
-    /** @var array */
     protected array $data;
 
-    /**
-     * Validator constructor.
-     * @param array[] $rules
-     * @param array $data
-     */
     public function __construct(array $rules, array $data)
     {
         $this->errors = [];
-
         $this->rules = $rules;
         $this->data = $data;
-
         $this->initRules();
     }
 
-    /**
-     */
     private function initRules(): void
     {
         foreach ($this->rules as $fieldName => $validators) {
@@ -57,10 +43,6 @@ class ValidatorChain
         }
     }
 
-    /**
-     * @param array $data
-     * @return $this
-     */
     public function updateData(array $data): ValidatorChain
     {
         $this->data = $data;
@@ -69,17 +51,11 @@ class ValidatorChain
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getErrors(): array
     {
         return $this->errors;
     }
 
-    /**
-     * @return bool
-     */
     public function hasErrors(): bool
     {
         if (empty($this->errors)) {

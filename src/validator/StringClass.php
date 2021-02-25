@@ -10,10 +10,6 @@ namespace app\validator;
 class StringClass implements Validator
 {
 
-    /**
-     * @param string $value
-     * @return bool
-     */
     public function valid(string $value): bool
     {
         if (!strlen($value)) return true;
@@ -28,9 +24,6 @@ class StringClass implements Validator
         return true;
     }
 
-    /**
-     * @return string
-     */
     public function getErrorMessage(): string
     {
         return "Allowed just alphabet chars";

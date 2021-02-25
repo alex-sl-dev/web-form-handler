@@ -13,12 +13,8 @@ use Swift_Transport_SmtpAgent;
  */
 class MailTransport
 {
-    /** @var Swift_Transport_SmtpAgent */
     protected Swift_Transport_SmtpAgent $transport;
 
-    /**
-     * MailTransport constructor.
-     */
     public function __construct()
     {
         $iniFile = parse_ini_file(realpath(__DIR__ . "/../../config.ini"), true);
@@ -29,10 +25,6 @@ class MailTransport
         $this->transport->setPassword($smtp['password']);
     }
 
-    /**
-     * @param MailMessage $mailMessage
-     * @return int
-     */
     public function send(MailMessage $mailMessage): int
     {
         $mailer = new Swift_Mailer($this->transport);

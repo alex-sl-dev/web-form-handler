@@ -4,6 +4,7 @@
 namespace app\models\star_event;
 
 
+use app\models\CountableIteratorTrait;
 use app\models\town\Town;
 use app\services\WeatherProviderService;
 use Countable;
@@ -19,13 +20,10 @@ use JsonSerializable;
  */
 class EventSessions implements iterator, countable, JsonSerializable
 {
-    use CountableIteratorItemsTrait;
+    use CountableIteratorTrait;
 
-    /** @var array|int[] */
     private static array $EVENT_HOURS = [14, 17, 20, 23];
 
-    /**
-     */
     public function __construct()
     {
         for ($day = 0; $day < 5; $day++) {
@@ -42,9 +40,6 @@ class EventSessions implements iterator, countable, JsonSerializable
         }
     }
 
-    /**
-     * @return array
-     */
     public function jsonSerialize(): array
     {
         $json = [];
