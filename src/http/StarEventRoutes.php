@@ -48,6 +48,7 @@ class StarEventRoutes extends HttpRouteHandler
     {
         try {
             $townsList = $this->townsRepository->getAll();
+
             $this->renderHTML('form', [
                 Form::$NAME => '',
                 Form::$EMAIL => '',
@@ -76,22 +77,15 @@ class StarEventRoutes extends HttpRouteHandler
         if ($_POST[StarEvent::$TOWN]) {
 
             $town = $this->townsRepository->getById($_POST[StarEvent::$TOWN]);
-            $this->weatherProvider->fetch($town->getTown());
-            $weatherList = $this->weatherProvider->getResponse();
-
-            // @todo Required some cache
-
-            $weather = $weatherList->getFirst();
-            $time = (new \DateTime())->setTimestamp($weather->getDt());
 
             $starEvent = new StarEvent(
                 $_POST[StarEvent::$NAME],
                 $_POST[StarEvent::$EMAIL],
                 $town,
-                new EventSession($weather, $time),
                 $_POST[StarEvent::$COMMENT]
             );
 
+            // @todo Required some cache
             $this->renderJSON($starEvent->getErrors());
 
             // @todo Save starEvent
@@ -133,7 +127,7 @@ class StarEventRoutes extends HttpRouteHandler
         try {
             $town = $this->townsRepository->getById($input->selectedTown);
             $this->weatherProvider->fetch($town->getTown());
-            $town->initializeEventSessions($this->weatherProvider->getResponse());
+            $town->initializeEventSessions($this->weatherProvider->getWeatherCollection());
 
             $this->renderJSON($town->getEventSessions());
         } catch (Exception $exception) {

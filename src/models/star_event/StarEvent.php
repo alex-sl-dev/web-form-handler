@@ -5,7 +5,7 @@ namespace app\models\star_event;
 
 
 use app\models\town\Town;
-use app\validator\Chain;
+use app\validator\ValidatorChain;
 use app\validator\Email;
 use app\validator\Length;
 use app\validator\Required;
@@ -34,32 +34,31 @@ class StarEvent
     protected EventSession $eventSession;
     /** @var string */
     protected string $comment;
-    /** @var Chain */
-    protected Chain $validator;
+    /** @var ValidatorChain */
+    protected ValidatorChain $validator;
 
     /**
      * Form constructor.
      * @param string $name
      * @param string $email
      * @param Town $town
-     * @param EventSession $eventSession
      * @param string $comment
      */
     public function __construct(
         string $name,
         string $email,
         Town $town,
-        EventSession $eventSession,
         string $comment
     )
     {
+
         $this->name = $name;
         $this->email = $email;
         $this->town = $town;
-        $this->eventSession = $eventSession;
+        $this->eventSession = new EventSession();
         $this->comment = $comment;
 
-        $this->validator = new Chain($this->validationRules(), $this->toArray(true));
+        $this->validator = new ValidatorChain($this->validationRules(), $this->toArray());
 
         $this->hasErrors();
     }
@@ -95,23 +94,25 @@ class StarEvent
     }
 
     /**
-     * @param bool $force
      * @return string[]
      */
-    public function toArray($force = false): array
+    public function toArray(): array
     {
-        if ($force || empty($this->hasErrors())) {
+        $eventTimestamp = 0;
 
-            return [
-                self::$NAME => $this->name,
-                self::$EMAIL => $this->email,
-                self::$TOWN => $this->town->getTown(),
-                self::$EVENT => $this->eventSession->getDateTime()->getTimestamp(),
-                self::$COMMENT => $this->comment
-            ];
+        if ($this->eventSession) {
+            $eventTimestamp = $this->eventSession->getDateTime()->getTimestamp();
         }
 
-        throw new DomainCreationException("Can't serialise:" . __CLASS__);
+        // throw new DomainCreationException("Can't serialise:" . __CLASS__);
+
+        return [
+            self::$NAME => $this->name,
+            self::$EMAIL => $this->email,
+            self::$TOWN => $this->town->getTown(),
+            self::$EVENT => $eventTimestamp,
+            self::$COMMENT => $this->comment
+        ];
     }
 
     /**
@@ -128,5 +129,16 @@ class StarEvent
     public function getErrors(): array
     {
         return $this->validator->getErrors();
+    }
+
+    /**
+     * @param EventSession $eventSession
+     * @return StarEvent
+     */
+    public function setEventSession(EventSession $eventSession): self
+    {
+        $this->eventSession = $eventSession;
+
+        return $this;
     }
 }

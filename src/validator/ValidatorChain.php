@@ -7,10 +7,10 @@ namespace app\validator;
 use app\models\star_event\DomainCreationException;
 
 /**
- * Class Chain
+ * Class ValidatorChain
  * @package app\validator
  */
-class Chain
+class ValidatorChain
 {
     /** @var Validator[] */
     protected array $rules;
@@ -20,7 +20,7 @@ class Chain
     protected array $data;
 
     /**
-     * Chain constructor.
+     * Validator constructor.
      * @param array[] $rules
      * @param array $data
      */
@@ -31,12 +31,12 @@ class Chain
         $this->rules = $rules;
         $this->data = $data;
 
-        $this->hasErrors();
+        $this->initRules();
     }
 
     /**
      */
-    private function init(): void
+    private function initRules(): void
     {
         foreach ($this->rules as $fieldName => $validators) {
 
@@ -58,21 +58,13 @@ class Chain
     }
 
     /**
-     * @param Validator[] $rules
-     * @return Chain
+     * @param array $data
+     * @return $this
      */
-    public function updateRules(array $rules): self
-    {
-        $this->rules = $rules;
-        $this->hasErrors();
-
-        return $this;
-    }
-
-    public function updateData(array $data): self
+    public function updateData(array $data): ValidatorChain
     {
         $this->data = $data;
-        $this->hasErrors();
+        $this->initRules();
 
         return $this;
     }
@@ -82,8 +74,6 @@ class Chain
      */
     public function getErrors(): array
     {
-        $this->hasErrors();
-
         return $this->errors;
     }
 
@@ -92,12 +82,11 @@ class Chain
      */
     public function hasErrors(): bool
     {
-        $this->init();
-
         if (empty($this->errors)) {
             return false;
         }
 
         return true;
     }
+
 }

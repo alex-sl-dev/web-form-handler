@@ -18,30 +18,18 @@ class EventSession
     /** @var DateTime  */
     protected DateTime $dateTime;
 
-    /** @var Weather  */
-    protected Weather $weather;
-
     /**
      * EventSession constructor.
-     * @param Weather $weather
-     * @param DateTime $dateTime
+     * @param DateTime|null $dateTime
      */
-    public function __construct(Weather $weather, DateTime $dateTime)
+    public function __construct(?DateTime $dateTime = null)
     {
-        $this->weather = $weather;
-        $this->dateTime = $dateTime;
+        $this->dateTime = new DateTime();
 
-        /*
-
-        $date = date("Y-m-d");
-        $this->dateTime = new DateTime("{$date}T{$hour}:00:00");
-
-        if ($day) {
-            $this->dateTime->add(new DateInterval("P{$day}D"));
+        if ($dateTime) {
+            $this->dateTime->setTimestamp($dateTime->getTimestamp());
         }
-        */
     }
-
 
     /**
      * @return DateTime

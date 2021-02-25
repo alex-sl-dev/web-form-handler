@@ -6,6 +6,7 @@ namespace app\models\town;
 
 use app\models\star_event\EventSessions;
 use app\models\star_event\WeathersCollection;
+use app\services\WeatherProviderService;
 
 /**
  * Class Town
@@ -31,6 +32,7 @@ class Town
     {
         $this->id = $id;
         $this->town = $town;
+        $this->eventSessions = new EventSessions();
     }
 
     /**
@@ -39,14 +41,6 @@ class Town
     public function getEventSessions(): EventSessions
     {
         return $this->eventSessions;
-    }
-
-    /**
-     * @param WeathersCollection $weatherList
-     */
-    public function initializeEventSessions(WeathersCollection $weatherList)
-    {
-        $this->eventSessions = EventSessions::createFutureSessions($weatherList);
     }
 
     /**

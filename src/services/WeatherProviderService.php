@@ -29,13 +29,19 @@ class WeatherProviderService
     {
         $iniFile = parse_ini_file(realpath(__DIR__ . "/../../config.ini"), true);
         $this->weatherProviderKey = $iniFile['weatherProvider']['key'];
+        $this->curlResponse = '';
     }
 
     /**
      * @param string $town
+     * @param bool $force
      */
-    public function fetch(string $town): void
+    public function fetch(string $town, $force = false): void
     {
+        if ($this->curlResponse && $force == false) {
+            return;
+        }
+
         $params = [
             'q' => $town, //. ', EE',
             'appid' => $this->weatherProviderKey
@@ -51,7 +57,7 @@ class WeatherProviderService
     /**
      * @return WeathersCollection
      */
-    public function getResponse(): WeathersCollection
+    public function getWeatherCollection(): WeathersCollection
     {
         return new WeathersCollection((json_decode($this->curlResponse))->list);
     }
