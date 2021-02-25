@@ -4,11 +4,9 @@
 namespace app\http;
 
 
-use app\models\star_event\EventSession;
+use app\models\star_event\EventSessionRepository;
 use app\models\star_event\Form;
-use app\models\MailMessage;
 use app\models\star_event\StarEvent;
-use app\models\town\Town;
 use app\models\town\TownsRepository;
 use app\services\MailTransport;
 use app\services\WeatherProviderService;
@@ -21,7 +19,6 @@ use Exception;
  */
 class StarEventRoutes extends HttpRouteHandler
 {
-
     /** @var TownsRepository */
     private TownsRepository $townsRepository;
 
@@ -29,7 +26,10 @@ class StarEventRoutes extends HttpRouteHandler
     private WeatherProviderService $weatherProvider;
 
     /** @var MailTransport */
-    private MailTransport $transportService;
+    private MailTransport $mailTransport;
+
+    /** @var EventSessionRepository */
+    private EventSessionRepository $eventSessionRepository;
 
     /**
      * StarEventRoutes constructor.
@@ -37,13 +37,11 @@ class StarEventRoutes extends HttpRouteHandler
     public function __construct()
     {
         $this->townsRepository = new TownsRepository();
+        $this->eventSessionRepository = new EventSessionRepository();
         $this->weatherProvider = new WeatherProviderService();
-        $this->transportService = new MailTransport();
+        $this->mailTransport = new MailTransport();
     }
 
-    /**
-     *
-     */
     public function show()
     {
         try {
@@ -64,57 +62,45 @@ class StarEventRoutes extends HttpRouteHandler
         }
     }
 
-    /**
-     *
-     */
-    public function submittedFormHandler()
+    public function submittedFormHandler(): void
     {
         if (!$this->isValidCSRF()) {
             $this->renderJSON(['error' => 'Not valid CSRF Token']);
             return;
         }
 
-        if ($_POST[StarEvent::$TOWN]) {
-
-            $town = $this->townsRepository->getById($_POST[StarEvent::$TOWN]);
-
-            $starEvent = new StarEvent(
-                $_POST[StarEvent::$NAME],
-                $_POST[StarEvent::$EMAIL],
-                $town,
-                $_POST[StarEvent::$COMMENT]
-            );
-
-            // @todo Required some cache
-            $this->renderJSON($starEvent->getErrors());
-
-            // @todo Save starEvent
-
-            /*
-            if (empty($starEvent->getErrors()) && boolval($_POST['submit'])) {
-                $mail = new MailMessage(
-                    $_POST['name'],
-                    $_POST['email'],
-                    $this->townsRepository->getById($_POST['town']),
-                    (new \DateTime())->setTimestamp($_POST['event-session'])
-                );
-                $this->transportService->send($mail);
-
-                $this->renderJSON(['status' => 'done']);
-            } else {
-
-            }*/
-
-        }
-        else {
+        if (!$_POST[StarEvent::$TOWN]) {
             $this->renderJSON(['status' => 'validate']);
+            return;
         }
 
+        $town = $this->townsRepository->getById($_POST[StarEvent::$TOWN]);
+
+        // @todo some cache
+        $starEvent = new StarEvent(
+            $_POST[StarEvent::$NAME],
+            $_POST[StarEvent::$EMAIL],
+            $town,
+            $_POST[StarEvent::$COMMENT]
+        );
+
+        if (empty($starEvent->getErrors()) && boolval($_POST['submit'])) {
+            $this->eventSessionRepository->save($starEvent);
+            /*
+            $mail = new MailMessage(
+            $_POST['name'],
+            $_POST['email'],
+            $this->townsRepository->getById($_POST['town']),
+            (new \DateTime())->setTimestamp($_POST['event-session'])
+            );
+            $this->transportService->send($mail);
+
+            $this->renderJSON(['status' => 'done']);
+            */
+            $this->renderJSON($starEvent->getErrors());
+        }
     }
 
-    /**
-     *
-     */
     public function eventSessionsHandler()
     {
         $inputJSON = file_get_contents('php://input');

@@ -12,10 +12,6 @@ use app\validator\Required;
 use app\validator\StringClass;
 use DomainException;
 
-/**
- * Class StarEvent
- * @package app\models\star_event
- */
 class StarEvent
 {
     public static string $NAME = 'name';
@@ -24,26 +20,13 @@ class StarEvent
     public static string $EVENT = 'event-session';
     public static string $COMMENT = 'comment';
 
-    /** @var string */
     protected string $name;
-    /** @var string */
     protected string $email;
-    /** @var Town */
     protected Town $town;
-    /** @var EventSession */
     protected EventSession $eventSession;
-    /** @var string */
     protected string $comment;
-    /** @var ValidatorChain */
     protected ValidatorChain $validator;
 
-    /**
-     * Form constructor.
-     * @param string $name
-     * @param string $email
-     * @param Town $town
-     * @param string $comment
-     */
     public function __construct(
         string $name,
         string $email,
@@ -51,7 +34,6 @@ class StarEvent
         string $comment
     )
     {
-
         $this->name = $name;
         $this->email = $email;
         $this->town = $town;
@@ -63,9 +45,6 @@ class StarEvent
         $this->hasErrors();
     }
 
-    /**
-     * @return array
-     */
     private function validationRules(): array
     {
         return [
@@ -93,9 +72,6 @@ class StarEvent
         ];
     }
 
-    /**
-     * @return string[]
-     */
     public function toArray(): array
     {
         $eventTimestamp = 0;
@@ -115,30 +91,55 @@ class StarEvent
         ];
     }
 
-    /**
-     * @return bool
-     */
     private function hasErrors(): bool
     {
         return $this->validator->hasErrors();
     }
 
-    /**
-     * @return array
-     */
     public function getErrors(): array
     {
         return $this->validator->getErrors();
     }
 
-    /**
-     * @param EventSession $eventSession
-     * @return StarEvent
-     */
     public function setEventSession(EventSession $eventSession): self
     {
         $this->eventSession = $eventSession;
 
         return $this;
     }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return Town
+     */
+    public function getTown(): Town
+    {
+        return $this->town;
+    }
+
+    /**
+     * @return EventSession
+     */
+    public function getEventSession(): EventSession
+    {
+        return $this->eventSession;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComment(): string
+    {
+        return $this->comment;
+    }
+
 }
